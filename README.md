@@ -1,1 +1,1 @@
-# Weather App
+# Financial Tracker App
