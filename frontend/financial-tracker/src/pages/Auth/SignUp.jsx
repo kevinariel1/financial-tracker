@@ -5,6 +5,8 @@ import Input from '../../components/Inputs/Input';
 import { Link } from 'react-router-dom';
 import { validateEmail } from '../../utils/helper';
 import ProfilePictureSelector from '../../components/Inputs/ProfilePictureSelector';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
 
 const SignUp = () => {
   const [profilePic, setProfilePic] = React.useState(null);
@@ -53,7 +55,35 @@ const SignUp = () => {
     console.log("Sign up successful:", { fullName, email, password });
     navigate("/dashboard"); // or wherever you want
 
+    //SIGN UP API CALL
+    try{
+
+      // Upload image if present
+      if (profilePic){
+        const imgUploadRes = await uploadImage(profilePic);
+        profileImageUrl = imgUploadRes.imageUrl || "";
+      }
+
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+        fullName, email, password,
+      })
+      const {token, user} = response.data;
+
+      if(token){
+        localStorage.setItem("token", token)
+        updateUser(user);
+        navigate("/login");
+      }
+    } catch {
+      if (error.response && error.response.data.message){
+        setError(error.response.data.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    }
   }
+
+
 
   return (
     <AuthLayout>
