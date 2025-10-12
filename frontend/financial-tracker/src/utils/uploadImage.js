@@ -2,9 +2,9 @@ import { API_PATHS } from "./apiPaths";
 import axiosInstance from "./axiosInstance";
 
 const uploadImage = async (imageFile) => {
-    const formData = new formData();
+    const formData = new FormData();
     // Attach image to form
-    formData.append('image', imageFile);
+    formData.append('profilePicture', imageFile);
 
     try{
         const response = await axiosInstance.post(API_PATHS.IMAGE.UPLOAD_IMAGE, formData, {
@@ -12,7 +12,7 @@ const uploadImage = async (imageFile) => {
                 'Content-Type': 'multipart/form-data' 
             },
         });
-        return response.data
+        return response.data;
     } catch (error) {
         console.error('Error uploading image:', error);
         throw error;

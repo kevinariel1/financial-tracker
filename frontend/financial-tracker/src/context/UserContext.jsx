@@ -1,9 +1,9 @@
-import React, { createContext, useState } from "react";
+import React, { createContext } from "react";
 
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = React.useState(null);
 
     //Function to update user data
     const updateUser = (userData) => {
