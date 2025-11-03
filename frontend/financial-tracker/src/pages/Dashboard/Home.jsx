@@ -15,6 +15,7 @@ import FinanceOverview from '../../components/Dashboard/FinanceOverview';
 import ExpenseTransactitons from '../../components/Dashboard/ExpenseTransactions';
 import Last30DaysExpenses from '../../components/Dashboard/LastThirtyDaysExpense';
 import RecentIncomeWithChart from '../../components/Dashboard/RecentIncomeWithChart';
+import RecentIncome from '../../components/Dashboard/RecentIncome';
 
 const Home = () => {
   useUserAuth();
@@ -88,17 +89,26 @@ const Home = () => {
           />
 
           <ExpenseTransactitons
-            transactions={dashboardData?.lastThirtyDaysExpense?.transactions || []}
-            onSeeMore={() => navigate("/exxpense")}
+            transactions={[...(dashboardData?.lastThirtyDaysExpense?.transactions || [])].sort(
+              (a, b) => new Date(b.date) - new Date(a.date) // newest → oldest
+            )}
+            onSeeMore={() => navigate("/expense")}
           />
 
           <Last30DaysExpenses
-            data={dashboardData?.lastThirtyDaysExpense?.transactions || []}
+            data={[...(dashboardData?.lastThirtyDaysExpense?.transactions || [])].sort(
+              (a, b) => new Date(a.date) - new Date(b.date) // oldest → newest
+            )}
           />
 
           <RecentIncomeWithChart
-            data={dashboardData?.lastSixtyDaysIncome?.transactions?.slice(0,4) || []}
+            data={dashboardData?.lastSixtyDaysIncome?.transactions?.slice(0, 4) || []}
             totalIncome={dashboardData?.totalIncome || 0}
+          />
+
+          <RecentIncome
+            transactions={dashboardData?.lastSixtyDaysIncome?.transactions || []}
+            onSeeMore={() => navigate("/income")}
           />
 
         </div>
