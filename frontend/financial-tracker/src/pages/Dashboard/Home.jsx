@@ -12,6 +12,9 @@ import { addThousandsSeparator } from '../../utils/helper';
 
 import RecentTransactions from '../../components/Dashboard/RecentTransactions';
 import FinanceOverview from '../../components/Dashboard/FinanceOverview';
+import ExpenseTransactitons from '../../components/Dashboard/ExpenseTransactions';
+import Last30DaysExpenses from '../../components/Dashboard/LastThirtyDaysExpense';
+import RecentIncomeWithChart from '../../components/Dashboard/RecentIncomeWithChart';
 
 const Home = () => {
   useUserAuth();
@@ -78,13 +81,26 @@ const Home = () => {
             onSeeMore={() => navigate("/expense")}
           />
 
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
           <FinanceOverview
             totalBalance={dashboardData?.totalBalance || 0}
             totalIncome={dashboardData?.totalIncome || 0}
             totalExpense={dashboardData?.totalExpense || 0}
           />
-        </div>
+
+          <ExpenseTransactitons
+            transactions={dashboardData?.lastThirtyDaysExpense?.transactions || []}
+            onSeeMore={() => navigate("/exxpense")}
+          />
+
+          <Last30DaysExpenses
+            data={dashboardData?.lastThirtyDaysExpense?.transactions || []}
+          />
+
+          <RecentIncomeWithChart
+            data={dashboardData?.lastSixtyDaysIncome?.transactions?.slice(0,4) || []}
+            totalIncome={dashboardData?.totalIncome || 0}
+          />
+
         </div>
       </div>
     </DashboardLayout>
