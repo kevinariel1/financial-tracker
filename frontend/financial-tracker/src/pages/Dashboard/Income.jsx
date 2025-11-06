@@ -3,6 +3,8 @@ import DashboardLayout from '../../components/layouts/DashboardLayout'
 import IncomeOverview from '../../components/Income/IncomeOverview'
 import axiosInstance from '../../utils/axiosInstance'
 import { API_PATHS } from '../../utils/apiPaths'
+import Modal from '../../components/Modal'
+import AddIncomeForm from '../../components/Income/AddIncomeForm'
 
 const Income = () => {
 
@@ -13,7 +15,7 @@ const Income = () => {
     data: null,
   });
 
-  const [openAddIncomeModal, setOpenAddIncomeModal ] = useState(false)
+  const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false)
 
   // Get All Income Details
   const fetchIncomeDetails = async () => {
@@ -26,7 +28,7 @@ const Income = () => {
         `${API_PATHS.INCOME.GET_ALL_INCOME}`
       )
 
-      if(response.data){
+      if (response.data) {
         setIncomeData(response.data);
       }
     } catch (error) {
@@ -37,13 +39,13 @@ const Income = () => {
   }
 
   // Handle All Income
-  const handleAllIncome = async (income) => {}
+  const handleAllIncome = async (income) => { }
 
   // Delete Income
-  const deleteIncome = async (id) => {}
+  const deleteIncome = async (id) => { }
 
   // handle download income details
-  const handleDownloadIncomeDetails = async () => {}
+  const handleDownloadIncomeDetails = async () => { }
 
   useEffect(() => {
     fetchIncomeDetails()
@@ -63,6 +65,17 @@ const Income = () => {
             />
           </div>
         </div>
+
+        <Modal
+          isOpen={openAddIncomeModal}
+          onClose={() => setOpenAddIncomeModal(false)}
+          title="Add Income"
+        >
+          <AddIncomeForm
+            onAddIncome={handleAllIncome}
+          />
+        </Modal>
+
       </div>
     </DashboardLayout>
   )
