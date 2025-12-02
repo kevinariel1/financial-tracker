@@ -1,5 +1,7 @@
 import React from 'react'
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Area, AreaChart } from 'recharts';
+import moment from 'moment';
+import { getDaySuffix } from '../../utils/helper';
 
 const CustomLineChart = ({ data }) => {
 
@@ -25,7 +27,21 @@ const CustomLineChart = ({ data }) => {
                         </linearGradient>
                     </defs>
                     <CartesianGrid stroke="none" />
-                    <XAxis dataKey="date" tick={{ fontSize: 12, fill: "#555" }} stroke='none' />
+                    <XAxis
+                        dataKey="date"
+                        stroke="none"
+                        tick={{ fontSize: 12, fill: "#555" }}
+                        tickFormatter={(value) => {
+                            // value example: "2025-11-03 (Internet)"
+                            const realDate = value.split(" ")[0]; // take "2025-11-03"
+                            const dateObj = new Date(realDate);
+
+                            const day = dateObj.getDate();
+                            const month = dateObj.toLocaleString("default", { month: "short" });
+
+                            return `${getDaySuffix(day)} ${month}`;
+                        }}
+                    />
                     <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke='none' />
                     <Tooltip content={<CustomTooltip />} />
                     <Area type="monotone" dataKey="amount" stroke="#7C3AED" fill="url(#incomeGradient)" strokeWidth={3} dot={{ r: 3, fill: "#AB8DF8" }} />

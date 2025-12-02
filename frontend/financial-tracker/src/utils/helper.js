@@ -53,12 +53,25 @@ export const prepareIncomeBarChartData = (data = []) => {
   return chartData;
 };
 
-export const prepareExpenseLineChartData = (data = []) => {
-  const sortedData = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+export const prepareExpenseLineChartData = (expenses) => {
+  const sorted = [...expenses].sort((a, b) => {
+    return new Date(a.date) - new Date(b.date);
+  });
 
-  return sortedData.map((item) => ({
-    date: moment(item.date).format("DD MMM"),
-    amount: Number(item.amount),
-    category: item.category,
+  return sorted.map(exp => ({
+    id: exp._id,
+    date: exp.date.slice(0, 10) + ` (${exp.category})`,
+    amount: Number(exp.amount),
+    category: exp.category
   }));
+};
+
+export const getDaySuffix = (day) => {
+  if (day >= 11 && day <= 13) return `${day}th`;
+  switch (day % 10) {
+    case 1: return `${day}st`;
+    case 2: return `${day}nd`;
+    case 3: return `${day}rd`;
+    default: return `${day}th`;
+  }
 };
