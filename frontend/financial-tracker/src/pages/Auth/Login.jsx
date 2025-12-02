@@ -20,31 +20,32 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!validateEmail(email)){
+    if (!validateEmail(email)) {
       setError('Please enter a valid email address.');
       return;
     }
 
-    if (!password){
+    if (!password) {
       setError('Please enter your password.');
       return;
     }
     setError(null);
 
     //LOGIN API CALL
-    try{
+    try {
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
         email, password,
       })
-      const {token, user} = response.data;
+      const { token, user } = response.data;
 
-      if (token){
+      if (token) {
         localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
         updateUser(user);
         navigate("/dashboard");
       }
-    } catch {
-      if (error.response && error.response.data.message){
+    } catch (error){
+      if (error.response && error.response.data.message) {
         setError(error.response.data.message);
       } else {
         setError("Something went wrong. Please try again.");
@@ -57,20 +58,20 @@ const Login = () => {
       <div className='lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center'>
         <h3 className='text-xl font-semibold text-black'>Welcome Back </h3>
         <p className='text-xs text-slate-700 mt-[5px] mb-6'>Please enter your details to log in</p>
-        
+
         <form className='' onSubmit={handleLogin}>
           <Input value={email}
-          onChange={({ target }) => setEmail(target.value)}
-          label="Email Address"
-          placeholder="john@example.com"
-          type="text"
+            onChange={({ target }) => setEmail(target.value)}
+            label="Email Address"
+            placeholder="john@example.com"
+            type="text"
           />
 
           <Input value={password}
-          onChange={({ target }) => setPassword(target.value)}
-          label="Password"
-          placeholder="Min. 8 characters"
-          type="password"
+            onChange={({ target }) => setPassword(target.value)}
+            label="Password"
+            placeholder="Min. 8 characters"
+            type="password"
           />
 
           {error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>}
