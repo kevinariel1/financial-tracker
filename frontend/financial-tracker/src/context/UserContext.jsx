@@ -1,9 +1,12 @@
-import React, { createContext } from "react";
+import React, { createContext, useState } from "react";
 
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = React.useState(null);
+    const [user, setUser] = useState(() => {
+        const savedUser = localStorage.getItem("user");
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
 
     //Function to update user data
     const updateUser = (userData) => {
@@ -12,19 +15,21 @@ const UserProvider = ({ children }) => {
 
     //Function to clear user data (ex. Logout)
     const clearUser = () => {
-        setUser(null);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        updateUser(null);
     }
 
     return (
         <UserContext.Provider
-        value={{
-            user,
-            updateUser,
-            clearUser
-        }}
+            value={{
+                user,
+                updateUser,
+                clearUser
+            }}
         >
             {children}
-        </UserContext.Provider>    
+        </UserContext.Provider>
     )
 }
 
