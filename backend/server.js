@@ -31,3 +31,5 @@ app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const mongoose = require("mongoose");   
+
+module.exports = app;   
