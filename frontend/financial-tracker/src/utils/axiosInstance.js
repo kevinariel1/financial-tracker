@@ -27,20 +27,18 @@ axiosInstance.interceptors.request.use(
 
 // Request Interceptor
 axiosInstance.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
     (error) => {
-        // Handle common errors globally
-        if (error.response){
-            if (error.response.status === 401){
-                // Redirect to login page
+        if (error.response) {
+            // ONLY redirect if we are NOT on the auth pages (Login/SignUp)
+            const isAuthPage = window.location.pathname === "/login" || window.location.pathname === "/signup";
+
+            if (error.response.status === 401 && !isAuthPage) {
+                localStorage.removeItem("token");
                 window.location.href = "/login";
-            } else if (error.response.status === 500){
+            } else if (error.response.status === 500) {
                 console.error("Server error. Please try again later.");
-            } else if (error.code === "ECONNABORTED"){
-                console.error("Request timeout. Please try again.");
-            } 
+            }
         }
         return Promise.reject(error);
     }

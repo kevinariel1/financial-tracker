@@ -51,19 +51,20 @@ const SignUp = () => {
     setError(null);
 
     try {
-      // 1. Upload image to Cloudinary if a file was selected
+      let profilePictureUrl = ""; // Start with empty string
+
+      // 1. ONLY upload if profilePic actually exists
       if (profilePic) {
         const imgUploadRes = await uploadImage(profilePic);
-        // We map 'imageUrl' from the upload response to 'profilePictureUrl'
         profilePictureUrl = imgUploadRes.imageUrl || "";
       }
 
-      // 2. Register the user with the Cloudinary URL included
+      // 2. Now call Register
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         fullName,
         email,
         password,
-        profilePictureUrl, // Matches the backend's expected key
+        profilePictureUrl,
       });
 
       const { token, user } = response.data;
@@ -71,8 +72,8 @@ const SignUp = () => {
       if (token) {
         // 3. Save to LocalStorage and Update Context
         localStorage.setItem("token", token);
-        updateUser(user); 
-        
+        updateUser(user);
+
         // Go straight to dashboard since they are now logged in
         navigate("/dashboard");
       } else {
