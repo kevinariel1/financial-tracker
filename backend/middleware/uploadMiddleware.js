@@ -2,13 +2,15 @@ const multer = require('multer');
 
 //Configure Storage
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+    destination: function (req, file, cb) {
+        // Check if we are on Vercel (production)
+        const uploadPath = process.env.NODE_ENV === 'production' ? '/tmp' : 'uploads/';
+        cb(null, uploadPath);
     },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    },
-})
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + "-" + file.originalname);
+    }
+});
 
 //File filter to allow only images
 const fileFilter = (req, file, cb) => {
@@ -20,7 +22,8 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
-const uplaod = multer({ storage, fileFilter, limits: { fileSize: 1024 * 1024 * 5 } // 5MB limit
+const uplaod = multer({
+    storage, fileFilter, limits: { fileSize: 1024 * 1024 * 5 } // 5MB limit
 });
 
 module.exports = uplaod;
