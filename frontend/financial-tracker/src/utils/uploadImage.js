@@ -5,11 +5,17 @@ const uploadImage = async (imageFile) => {
   const formData = new FormData();
   formData.append("profilePicture", imageFile);
 
-  // Use a direct axios call to avoid the "No Token" interceptor
+  // 1. Manually check if the URL is correct
+  // Replace 'https://your-actual-backend.vercel.app' with your real backend URL
+  const baseURL = "https://your-actual-backend.vercel.app"; 
+  
   const response = await axios.post(
-    `${process.env.REACT_APP_BACKEND_URL}${API_PATHS.AUTH.UPLOAD_IMAGE}`,
+    `${baseURL}${API_PATHS.AUTH.UPLOAD_IMAGE}`,
     formData,
-    { headers: { "Content-Type": "multipart/form-data" } }
+    { 
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: false // Helps avoid some CORS issues on public routes
+    }
   );
   return response.data;
 };
