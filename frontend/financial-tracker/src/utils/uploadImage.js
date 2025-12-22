@@ -1,22 +1,17 @@
+import axios from "axios";
 import { API_PATHS } from "./apiPaths";
-import axiosInstance from "./axiosInstance";
 
 const uploadImage = async (imageFile) => {
-    const formData = new FormData();
-    // Attach image to form
-    formData.append('profilePicture', imageFile);
+  const formData = new FormData();
+  formData.append("profilePicture", imageFile);
 
-    try{
-        const response = await axiosInstance.post(API_PATHS.IMAGE.UPLOAD_IMAGE, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data' 
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error uploading image:', error);
-        throw error;
-    }
-}
+  // Use a direct axios call to avoid the "No Token" interceptor
+  const response = await axios.post(
+    `${process.env.REACT_APP_BACKEND_URL}${API_PATHS.AUTH.UPLOAD_IMAGE}`,
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } }
+  );
+  return response.data;
+};
 
-export default uploadImage
+export default uploadImage;

@@ -26,7 +26,7 @@ exports.registerUser = async (req, res) => {
             fullName, 
             email, 
             password, 
-            profilePictureUrl: profilePictureUrl || null 
+            profilePictureUrl: profilePictureUrl || ""
         });
         
         await user.save();

@@ -30,7 +30,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/getUser", protect, getUserInfo);
 
-router.post("/uploadProfilePicture", protect, upload.single("profilePicture"), async (req, res) => {
+router.post("/uploadProfilePicture", upload.single("profilePicture"), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: "No file uploaded" });
