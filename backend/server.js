@@ -16,20 +16,18 @@ app.get("/", (req, res) => {
 });
 
 // 2. CORS - Ensure this matches your Vercel frontend URL
-// Allow the specific frontend domain
-app.use(cors({
-    origin: [
-        "https://financial-tracker-rjbe-8ezl4j5um-kevins-projects-60310d70.vercel.app", // Your current preview link
-        "financial-tracker-alpha-eight.vercel.app", // Your production link
-        "http://localhost:5173" // Local dev
-    ],
+const corsOptions = {
+    origin: true, // This dynamically allows the requesting origin
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
-}));
+};
 
-// Handle OPTIONS pre-flight for all routes
-app.options('*', cors());
+app.use(cors(corsOptions));
+
+// 2. Fix the crashing OPTIONS route
+// Use a regex-safe wildcard or just rely on the cors middleware above
+app.options(/(.*)/, cors(corsOptions));
 
 app.use(express.json());
 
