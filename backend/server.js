@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 
 // 2. CORS - Ensure this matches your Vercel frontend URL
 app.use(cors({ 
-  origin: process.env.CLIENT_URL || "*", 
+  origin: "financial-tracker-alpha-eight.vercel.app", 
   methods: ["GET", "POST", "PUT", "DELETE"], 
   credentials: true,
 }));

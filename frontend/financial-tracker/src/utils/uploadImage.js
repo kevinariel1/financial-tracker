@@ -6,7 +6,7 @@ const uploadImage = async (imageFile) => {
   formData.append("profilePicture", imageFile);
 
   // Replace this with your EXACT Vercel backend URL
-  const baseURL = "https://financial-tracker-rjbe.vercel.app/"; 
+  const baseURL = "https://financial-tracker-rjbe.vercel.app"; 
   
   const response = await axios.post(
     `${baseURL}${API_PATHS.AUTH.UPLOAD_IMAGE}`, // This evaluates to /api/v1/auth/uploadProfilePicture
