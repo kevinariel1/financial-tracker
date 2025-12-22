@@ -16,11 +16,20 @@ app.get("/", (req, res) => {
 });
 
 // 2. CORS - Ensure this matches your Vercel frontend URL
-app.use(cors({ 
-  origin: "financial-tracker-alpha-eight.vercel.app", 
-  methods: ["GET", "POST", "PUT", "DELETE"], 
-  credentials: true,
+// Allow the specific frontend domain
+app.use(cors({
+    origin: [
+        "https://financial-tracker-rjbe-8ezl4j5um-kevins-projects-60310d70.vercel.app", // Your current preview link
+        "financial-tracker-alpha-eight.vercel.app", // Your production link
+        "http://localhost:5173" // Local dev
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// Handle OPTIONS pre-flight for all routes
+app.options('*', cors());
 
 app.use(express.json());
 
