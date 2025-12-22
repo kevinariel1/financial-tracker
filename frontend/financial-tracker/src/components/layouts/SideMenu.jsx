@@ -6,6 +6,7 @@ import CharAvatar from '../Cards/CharAvatar';
 
 const SideMenu = ({ activeMenu }) => {
   const { user, clearUser } = React.useContext(UserContext);
+  console.log("SIDEBAR USER DATA:", user);
   const navigate = useNavigate();
   const handleClick = (route) => {
     if (route === "logout") {
