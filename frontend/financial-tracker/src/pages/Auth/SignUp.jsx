@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import AuthLayout from '../../components/layouts/AuthLayout'
 import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Inputs/Input';
@@ -11,22 +11,23 @@ import uploadImage from '../../utils/uploadImage';
 import { UserContext } from '../../context/UserContext';
 
 const SignUp = () => {
-  const [profilePic, setProfilePic] = React.useState(null);
-  const [fullName, setFullName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
-  const [error, setError] = React.useState(null);
+  const [profilePic, setProfilePic] = useState(null);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState(null);
 
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  //Handle SignUp Form 
+  // Handle SignUp Form 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
     let profilePictureUrl = null;
 
+    // Validation
     if (!fullName || !email || !password || !confirmPassword) {
       setError("All fields are required");
       return;
@@ -50,34 +51,38 @@ const SignUp = () => {
     setError(null);
 
     try {
-      // Upload image if present
+      // 1. Upload image to Cloudinary if a file was selected
       if (profilePic) {
         const imgUploadRes = await uploadImage(profilePic);
+        // We map 'imageUrl' from the upload response to 'profilePictureUrl'
         profilePictureUrl = imgUploadRes.imageUrl || "";
       }
 
+      // 2. Register the user with the Cloudinary URL included
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         fullName,
         email,
         password,
-        profilePictureUrl,
+        profilePictureUrl, // Matches the backend's expected key
       });
 
       const { token, user } = response.data;
 
       if (token) {
+        // 3. Save to LocalStorage and Update Context
         localStorage.setItem("token", token);
-        updateUser(user);
-        navigate("/login");
+        updateUser(user); 
+        
+        // Go straight to dashboard since they are now logged in
+        navigate("/dashboard");
       } else {
+        // Fallback if your backend doesn't auto-login after signup
         navigate("/login");
       }
     } catch (error) {
       console.error("SignUp error (full):", error);
       if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Status:", error.response.status);
-        setError(error.response.data.message || JSON.stringify(error.response.data));
+        setError(error.response.data.message || "An error occurred during signup.");
       } else {
         setError("Something went wrong. Please try again.");
       }

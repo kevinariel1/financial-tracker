@@ -8,26 +8,41 @@ const generateToken = (userId) => {
 
 //Register User
 exports.registerUser = async (req, res) => {
+    // Make sure 'profilePictureUrl' is included here
     const { fullName, email, password, profilePictureUrl } = req.body || {};
 
     if (!fullName || !email || !password) {
         return res.status(400).json({ message: "Please provide all required fields" });
     }
 
-    try{
-        // Check if user already exists
+    try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        // Create new user
-        const user = new User({ fullName, email, password, profilePictureUrl });
+        // Create user with the Cloudinary URL (or null if they didn't upload one)
+        const user = new User({ 
+            fullName, 
+            email, 
+            password, 
+            profilePictureUrl: profilePictureUrl || null 
+        });
+        
         await user.save();
 
-        res.status(201).json({ id:user._id, user, token: generateToken(user._id), });
+        res.status(201).json({ 
+            id: user._id, 
+            user: {
+                _id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                profilePictureUrl: user.profilePictureUrl
+            }, 
+            token: generateToken(user._id) 
+        });
     } catch (error) {
-        res .status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Server error", error: error.message });
     }
 }
 
