@@ -11,6 +11,11 @@ const UserProvider = ({ children }) => {
     //Function to update user data
     const updateUser = (userData) => {
         setUser(userData);
+        if (userData) {
+            localStorage.setItem("user", JSON.stringify(userData));
+        } else {
+            localStorage.removeItem("user");
+        }
     }
 
     //Function to clear user data (ex. Logout)
