@@ -10,31 +10,36 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
-// Middleware to handle CORS
-app.use(cors({ origin: process.env.CLIENT_URL || "*", methods: ["GET", "POST", "PUT", "DELETE"], allowedHeaders: ["Content-Type", "Authorization"], }));
-
-app.use (express.json());
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// 1. Root route to fix "Cannot GET /"
+app.get("/", (req, res) => {
+  res.send("Financial Tracker API is running!");
 });
 
+// 2. CORS - Ensure this matches your Vercel frontend URL
+app.use(cors({ 
+  origin: process.env.CLIENT_URL || "*", 
+  methods: ["GET", "POST", "PUT", "DELETE"], 
+  allowedHeaders: ["Content-Type", "Authorization"], 
+}));
+
+app.use(express.json());
+
+// 3. Connect DB
 connectDB();
 
+// 4. Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/income", incomeRoutes);
 app.use("/api/v1/expense", expenseRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 
-// Serve static files from the "uploads" directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-const mongoose = require("mongoose");   
-
+// 5. REMOVE the first app.listen and use only this conditional one
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-module.exports = app;   
+// 6. EXPORT is required for Vercel
+module.exports = app;
