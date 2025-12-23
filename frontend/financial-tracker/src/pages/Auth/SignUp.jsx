@@ -51,20 +51,18 @@ const SignUp = () => {
     setError(null);
 
     try {
-      let profilePictureUrl = ""; // Start with empty string
+      let profilePictureUrl = ""; // Only declare it once here
 
-      // 1. ONLY upload if profilePic actually exists
       if (profilePic) {
         const imgUploadRes = await uploadImage(profilePic);
         profilePictureUrl = imgUploadRes.imageUrl || "";
       }
 
-      // 2. Now call Register
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         fullName,
         email,
         password,
-        profilePictureUrl,
+        profilePictureUrl, // This will now correctly be "" or the Cloudinary URL
       });
 
       const { token, user } = response.data;
