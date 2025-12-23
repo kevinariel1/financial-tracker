@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_PATHS } from "./apiPaths";
 
-const uploadImage = async (imageFile) => {
+export const uploadImage = async (imageFile) => {
   const formData = new FormData();
   formData.append("profilePicture", imageFile);
 
@@ -14,6 +14,3 @@ const uploadImage = async (imageFile) => {
   );
   return response.data;
 };
-
-// THIS IS THE LINE VITE IS COMPLAINING ABOUT:
-export default uploadImage;
