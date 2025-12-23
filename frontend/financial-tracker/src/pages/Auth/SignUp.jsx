@@ -54,6 +54,7 @@ const SignUp = () => {
       let profilePictureUrl = ""; // Only declare it once here
 
       if (profilePic) {
+        // Use IMAGE instead of AUTH
         const imgUploadRes = await uploadImage(profilePic);
         profilePictureUrl = imgUploadRes.imageUrl || "";
       }
