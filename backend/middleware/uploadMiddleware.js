@@ -26,4 +26,4 @@ const uplaod = multer({
     storage, fileFilter, limits: { fileSize: 1024 * 1024 * 5 } // 5MB limit
 });
 
-module.exports = uplaod;
+module.exports = upload;
