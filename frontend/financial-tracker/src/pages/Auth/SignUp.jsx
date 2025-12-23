@@ -54,8 +54,10 @@ const SignUp = () => {
       let profilePictureUrl = ""; // Only declare it once here
 
       if (profilePic) {
-        // Use IMAGE instead of AUTH
+        // Pass the file to the helper
         const imgUploadRes = await uploadImage(profilePic);
+
+        // Your backend returns { imageUrl: req.file.path }
         profilePictureUrl = imgUploadRes.imageUrl || "";
       }
 
