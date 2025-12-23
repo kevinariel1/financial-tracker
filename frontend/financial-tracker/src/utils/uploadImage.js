@@ -20,10 +20,10 @@ export const uploadImage = async (imageFile) => {
   }
 
   const response = await axios.post(
-    `${baseURL}${endpoint}`, // This will now fail safely if endpoint is missing
-    formData,
-    { headers: { "Content-Type": "multipart/form-data" } }
-  );
+  "https://financial-tracker-rjbe.vercel.app/api/v1/auth/uploadProfilePicture",
+  formData,
+  { headers: { "Content-Type": "multipart/form-data" } }
+);
 
   return response.data;
 };
