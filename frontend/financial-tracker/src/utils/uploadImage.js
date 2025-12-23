@@ -1,4 +1,3 @@
-// src/utils/uploadImage.js
 import axios from "axios";
 import { API_PATHS } from "./apiPaths";
 
@@ -6,7 +5,6 @@ const uploadImage = async (imageFile) => {
   const formData = new FormData();
   formData.append("profilePicture", imageFile);
 
-  // Use the Vite variable or hardcode it for this test
   const baseURL = import.meta.env.VITE_API_URL || "https://financial-tracker-rjbe.vercel.app"; 
   
   const response = await axios.post(
@@ -16,3 +14,6 @@ const uploadImage = async (imageFile) => {
   );
   return response.data;
 };
+
+// THIS IS THE LINE VITE IS COMPLAINING ABOUT:
+export default uploadImage;
