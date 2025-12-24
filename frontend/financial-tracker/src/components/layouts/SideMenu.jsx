@@ -27,11 +27,9 @@ const SideMenu = ({ activeMenu }) => {
       <div className="flex flex-col items-center justify-center gap-3 mt-3 mb-7 ">
         {user?.profilePictureUrl ? (
           <img
-            src={user.profilePictureUrl ?
-              user.profilePictureUrl.replace('/upload/', '/upload/w_100,h_100,c_fill,g_face,q_auto,f_auto/') :
-              "default-avatar.png"}
-            alt="Profile"
-            className="w-10 h-10 rounded-full"
+            src={user.profilePictureUrl}
+            alt="Profile Image"
+            className='w-20 h-20 object-cover rounded-full'
           />
         ) : (
           <CharAvatar
