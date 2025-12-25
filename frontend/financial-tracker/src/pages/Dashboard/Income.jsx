@@ -65,8 +65,8 @@ const Income = () => {
 
     try {
       await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME, {
-        category,
-        amount,
+        source, // CHANGED THIS FROM category TO source
+        amount: Number(amount), // Good practice to ensure it's a number
         date,
         icon,
       })
