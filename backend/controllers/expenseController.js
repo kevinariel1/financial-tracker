@@ -1,5 +1,8 @@
 const xlsx = require("xlsx");
 const Expense = require("../models/Expense");
+const { createWorker } = require('tesseract.js');
+const sharp = require('sharp');
+const { parseReceiptText } = require('../utils/parseReceipt');
 
 // Add expense
 exports.addExpense = async (req, res) => {
@@ -96,5 +99,46 @@ exports.downloadExpenseExcel = async (req, res) => {
     } catch (error) {
         console.error("Error downloading expense Excel:", error);
         res.status(500).json({ message: "Server error" });
+    }
+};
+
+// Scan receipt
+exports.scanReceipt = async (req, res) => {
+    let worker;
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "No receipt image provided." });
+        }
+
+        // Image preprocessing via Sharp: grayscale and resize to improve OCR
+        const processedImageBuffer = await sharp(req.file.buffer)
+            .resize({ width: 1000 })
+            .grayscale()
+            .normalize()
+            .toBuffer();
+
+        // Initialize Tesseract worker
+        worker = await createWorker('eng');
+
+        // Recognize text
+        const { data: { text } } = await worker.recognize(processedImageBuffer);
+        
+        // Terminate worker to prevent memory leaks
+        await worker.terminate();
+        worker = null;
+
+        // Parse extracted text
+        const parsedData = parseReceiptText(text);
+
+        res.status(200).json({
+            message: "Receipt scanned successfully",
+            data: parsedData
+        });
+    } catch (error) {
+        console.error("Error scanning receipt:", error);
+        if (worker) {
+            await worker.terminate();
+        }
+        res.status(500).json({ message: "Error processing receipt image." });
     }
 };
